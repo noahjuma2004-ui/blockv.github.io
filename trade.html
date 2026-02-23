@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blockvance - Trade</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #0b0f1a;
+    color: white;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background-color: #0b0f1a;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #3b82f6;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    position: relative;
+}
+
+.nav-links li {
+    position: relative;
+    cursor: pointer;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+}
+
+/* Dropdown */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 30px;
+    left: 0;
+    background-color: #111827;
+    border-radius: 8px;
+    min-width: 180px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 12px 15px;
+    color: white;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.dropdown-menu a:hover {
+    background-color: #1f2937;
+}
+
+/* Show dropdown */
+.show {
+    display: block;
+}
+
+/* Demo page content */
+.content {
+    padding: 60px 40px;
+}
+
+.content h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    color: #3b82f6;
+}
+
+.content p {
+    font-size: 18px;
+    color: #9ca3af;
+}
+</style>
+
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">BLOCVANCE</div>
+
+    <ul class="nav-links">
+        <li><a href="market.html">Market</a></li>
+
+        <li id="tradeBtn" onclick="toggleTradeDropdown(event)">
+            Trade ▾
+            <div class="dropdown-menu" id="tradeMenu">
+                <a href="market.html">P2P</a>
+                <a href="spot.html">Spot Trading</a>
+            </div>
+        </li>
+
+        <li><a href="ai-trading.html">AI Trading</a></li>
+        <li><a href="#">Crypto Currency</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+    </ul>
+</nav>
+
+<div class="content">
+    <h1>Welcome to Blockvance Trading Dashboard</h1>
+    <p>Select a trading option from the Trade menu above.</p>
+</div>
+
+<script>
+    function toggleTradeDropdown(event) {
+        event.stopPropagation();
+        document.getElementById('tradeMenu').classList.toggle('show');
+    }
+
+    // Toggle dropdown on click
+    document.getElementById("tradeBtn").addEventListener("click", function(event) {
+        event.stopPropagation();
+        document.getElementById("tradeMenu").classList.toggle("show");
+    });
+
+    // Close dropdown when clicking outside
+    window.addEventListener("click", function() {
+        document.getElementById("tradeMenu").classList.remove("show");
+    });
+</script>
+
+
+</body>
+</html>

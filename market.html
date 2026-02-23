@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market - Blockvance</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Inter',sans-serif;
+        }
+
+        body{
+            background: linear-gradient(135deg,#1b2236,#232a47);
+            color:white;
+            padding:30px 60px;
+        }
+
+        .top-bar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .back{
+            color:#9fb3d9;
+            font-size:16px;
+            cursor:pointer;
+            text-decoration: none;
+        }
+
+        .back:hover {
+            color:#63a4ff;
+        }
+
+        h1{
+            font-size:52px;
+            color:#63a4ff;
+            margin-top:20px;
+        }
+
+        .subtitle{
+            color:#9fb3d9;
+            font-size:20px;
+            margin-bottom:30px;
+        }
+
+        .trade-bar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:40px;
+        }
+
+        .trade-left{
+            display:flex;
+            gap:15px;
+        }
+
+        .btn{
+            padding:12px 24px;
+            border-radius:8px;
+            border:none;
+            cursor:pointer;
+            font-size:16px;
+            transition: all 0.3s ease;
+        }
+
+        .buy-btn{
+            background:#1f7a4c;
+            color:#6cffb1;
+        }
+
+        .sell-btn{
+            background:#2c3557;
+            color:#b4c7ff;
+        }
+
+        .refresh{
+            background:#1c243f;
+            border:1px solid #34406b;
+            color:#cfd8ff;
+        }
+
+        .refresh:hover {
+            background:#2a3559;
+            border-color:#3a6df0;
+        }
+
+        .refresh.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .refresh.success {
+            background:#1f7a4c !important;
+            border-color:#1f7a4c !important;
+        }
+
+        .crypto-prices{
+            display:flex;
+            gap:40px;
+            font-weight:600;
+        }
+
+        .crypto{
+            text-align:center;
+        }
+
+        .crypto span{
+            display:block;
+            font-weight:400;
+            font-size:14px;
+            margin-top:4px;
+        }
+
+        .green{ color:#3eea92;}
+        .red{ color:#ff5c5c;}
+
+        .card{
+            background:linear-gradient(135deg,#1e2745,#182036);
+            border-radius:16px;
+            padding:40px;
+        }
+
+        .card h2{
+            font-size:32px;
+            margin-bottom:10px;
+        }
+
+        .card p{
+            color:#9fb3d9;
+            margin-bottom:25px;
+        }
+
+        .filters{
+            display:flex;
+            gap:15px;
+            margin-bottom:30px;
+        }
+
+        .filter-btn{
+            background:#10182c;
+            border:1px solid #2c3557;
+            color:#cfd8ff;
+            padding:10px 20px;
+            border-radius:8px;
+            cursor:pointer;
+        }
+
+        .filter-btn.active{
+            background:#3a6df0;
+        }
+
+        .table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        .table th{
+            text-align:left;
+            color:#9fb3d9;
+            padding:20px 10px;
+        }
+
+        .table td{
+            padding:25px 10px;
+            border-top:1px solid #2c3557;
+            vertical-align:middle;
+        }
+
+        .vendor-row {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .vendor-row.fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .vendor-row.fading {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .vendor{
+            display:flex;
+            align-items:center;
+            gap:15px;
+        }
+
+        .avatar{
+            width:55px;
+            height:55px;
+            border-radius:50%;
+            background:url('https://randomuser.me/api/portraits/women/44.jpg');
+            background-size:cover;
+        }
+
+        .price{
+            font-size:22px;
+            font-weight:600;
+        }
+
+        .badge-red{
+            background:#5a1e24;
+            color:#ff6b6b;
+            padding:6px 12px;
+            border-radius:20px;
+            font-size:14px;
+            margin-left:10px;
+        }
+
+        .payment{
+            background:#1c243f;
+            padding:8px 14px;
+            border-radius:20px;
+            border:1px solid #2c3557;
+        }
+
+        .action{
+            display:flex;
+            gap:15px;
+        }
+
+        .buy-action{
+            background:#1f7a4c;
+            padding:12px 30px;
+            border-radius:10px;
+            color:white;
+            border:none;
+            cursor:pointer;
+            font-weight:600;
+        }
+
+        .buy-action:hover {
+            background:#158c3f;
+        }
+
+        .icon-btn{
+            background:#10182c;
+            border:1px solid #2c3557;
+            padding:10px 14px;
+            border-radius:10px;
+            cursor:pointer;
+        }
+
+        .icon-btn:hover {
+            background:#1c243f;
+            border-color:#3a6df0;
+        }
+
+        .vendors-info {
+            text-align: center;
+            margin-top: 30px;
+            color: #9fb3d9;
+            font-size: 16px;
+        }
+
+        .refresh-timer {
+            color: #3a6df0;
+            font-weight: 600;
+        }
+
+        .load-more-btn {
+            background: #3a6df0;
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .load-more-btn:hover {
+            background: #2e5bc4;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="top-bar">
+        <div>
+            <div class="back" onclick="window.location.href='blockwave.html'">← Back to Dashboard</div>
+            <h1>P2P Trading</h1>
+            <div class="subtitle">Trade cryptocurrencies directly with verified vendors</div>
+        </div>
+    </div>
+
+    <div class="trade-bar">
+        <div class="trade-left">
+            <button class="btn buy-btn" onclick="window.location.href='p2p-buy.html'">Buy</button>
+            <button class="btn sell-btn" onclick="window.location.href='p2p-sell.html'">Sell</button>
+            <button class="btn refresh" id="refreshBtn" onclick="refreshVendors()">⟳ Refresh Vendors</button>
+        </div>
+
+        <div class="crypto-prices">
+            <div class="crypto">BTC $67021.00 <span class="green">+0.89%</span></div>
+            <div class="crypto">ETH $1949.99 <span class="green">+0.28%</span></div>
+            <div class="crypto">LTC $52.60 <span class="red">-1.30%</span></div>
+            <div class="crypto">SOL $81.99 <span class="green">+0.62%</span></div>
+            <div class="crypto">USDT $1.00 <span class="green">+0.01%</span></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Buy Crypto Offers</h2>
+        <p>Choose from verified vendors with competitive rates</p>
+
+        <div class="filters">
+            <button class="filter-btn active" onclick="window.location.href='p2p-buy.html'">All</button>
+            <button class="filter-btn" onclick="window.location.href='p2p-buy.html?coin=USDT'">USDT</button>
+            <button class="filter-btn" onclick="window.location.href='p2p-buy.html?coin=BTC'">BTC</button>
+            <button class="filter-btn" onclick="window.location.href='p2p-buy.html?coin=ETH'">ETH</button>
+            <button class="filter-btn" onclick="window.location.href='p2p-buy.html?coin=LTC'">LTC</button>
+            <button class="filter-btn" onclick="window.location.href='p2p-buy.html?coin=SOL'">SOL</button>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Vendor</th>
+                    <th>Price</th>
+                    <th>Available</th>
+                    <th>Limits (USD)</th>
+                    <th>Payment</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="vendorsTable">
+            </tbody>
+        </table>
+
+        <div class="vendors-info">
+            <p><span id="vendor-count">10</span> vendors (auto refresh in <span class="refresh-timer" id="countdown">30:00</span>)</p>
+            <button class="load-more-btn" onclick="loadMoreVendors()">Load More Vendors</button>
+        </div>
+
+    </div>
+
+<script>
+    // Extended vendor data for buying P2P section
+    const vendorNames = [
+        { name: 'Petra Novak', avatar: 'women/44', rating: 4.9, trades: 544 },
+        { name: 'Marcus Thompson', avatar: 'men/32', rating: 4.8, trades: 1023 },
+        { name: 'Sarah Chen', avatar: 'women/1', rating: 5.0, trades: 892 },
+        { name: 'James Rodriguez', avatar: 'men/5', rating: 4.7, trades: 735 },
+        { name: 'Emma Wilson', avatar: 'women/67', rating: 4.9, trades: 1156 },
+        { name: 'David Kumar', avatar: 'men/42', rating: 4.6, trades: 589 },
+        { name: 'Olivia Martinez', avatar: 'women/53', rating: 4.95, trades: 1423 },
+        { name: 'Michael Zhang', avatar: 'men/65', rating: 4.8, trades: 945 },
+        { name: 'Jessica Brown', avatar: 'women/75', rating: 4.85, trades: 1067 },
+        { name: 'Christopher Lee', avatar: 'men/80', rating: 4.75, trades: 812 },
+        { name: 'Amanda Foster', avatar: 'women/26', rating: 5.0, trades: 1289 },
+        { name: 'Robert Taylor', avatar: 'men/15', rating: 4.7, trades: 678 },
+        { name: 'Lisa Anderson', avatar: 'women/38', rating: 4.9, trades: 923 },
+        { name: 'Kevin White', avatar: 'men/52', rating: 4.65, trades: 445 },
+        { name: 'Rachel Green', avatar: 'women/12', rating: 4.95, trades: 1567 },
+        { name: 'Daniel Martinez', avatar: 'men/22', rating: 4.88, trades: 1678 },
+        { name: 'Sophia Lee', avatar: 'women/45', rating: 4.92, trades: 1345 },
+        { name: 'William Chen', avatar: 'men/58', rating: 4.78, trades: 987 },
+        { name: 'Isabella Wang', avatar: 'women/62', rating: 4.97, trades: 2103 },
+        { name: 'Alexander Kim', avatar: 'men/71', rating: 4.82, trades: 756 },
+        { name: 'Mia Johnson', avatar: 'women/88', rating: 4.91, trades: 1890 },
+        { name: 'Ethan Davis', avatar: 'men/33', rating: 4.68, trades: 543 },
+        { name: 'Charlotte Brown', avatar: 'women/29', rating: 4.94, trades: 2234 },
+        { name: 'Benjamin Taylor', avatar: 'men/47', rating: 4.73, trades: 821 },
+        { name: 'Amelia Wilson', avatar: 'women/51', rating: 4.89, trades: 1456 },
+        { name: 'Lucas Moore', avatar: 'men/61', rating: 4.77, trades: 934 },
+        { name: 'Harper Anderson', avatar: 'women/73', rating: 4.96, trades: 1876 },
+        { name: 'Mason Thomas', avatar: 'men/39', rating: 4.71, trades: 667 },
+        { name: 'Evelyn Jackson', avatar: 'women/16', rating: 4.93, trades: 2011 },
+        { name: 'Logan Harris', avatar: 'men/54', rating: 4.69, trades: 789 }
+    ];
+
+    const paymentMethods = ['USDT TRC20', 'USDT ERC20', 'BTC', 'ETH'];
+
+    // Track displayed vendors for load more functionality
+    let displayedVendors = [];
+    let currentDisplayCount = 0;
+    const vendorsPerLoad = 10;
+
+    // Generate random price around $0.97 (market rate)
+    function generatePrice() {
+        const basePrice = 0.97;
+        const variation = (Math.random() * 0.1 - 0.05).toFixed(2);
+        const price = (basePrice + parseFloat(variation)).toFixed(2);
+        return price;
+    }
+
+    // Generate random percentage for badge
+    function generateBadgePercentage() {
+        const isPositive = Math.random() > 0.5;
+        const percentage = (Math.random() * 0.5).toFixed(2);
+        const sign = isPositive ? '+' : '-';
+        return sign + percentage + '%';
+    }
+
+    // Generate random available amount
+    function generateAvailable() {
+        return (Math.random() * 7000 + 1000).toFixed(2);
+    }
+
+    // Generate random limits
+    function generateLimits(available) {
+        const availableNum = parseFloat(available);
+        const minLimit = Math.floor(Math.random() * 50 + 20);
+        const maxLimit = Math.floor(availableNum * (0.3 + Math.random() * 0.4));
+        return '$' + minLimit + '.00 - $' + maxLimit + '.00';
+    }
+
+    // Shuffle array
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // Generate vendor row HTML
+    function generateVendorRow(vendor) {
+        const price = generatePrice();
+        const badgePct = generateBadgePercentage();
+        const available = generateAvailable();
+        const limits = generateLimits(available);
+        const payment = paymentMethods[Math.floor(Math.random() * paymentMethods.length)];
+        const avatarUrl = 'https://randomuser.me/api/portraits/' + vendor.avatar + '.jpg';
+
+        return '<tr class="vendor-row">' +
+            '<td>' +
+                '<div class="vendor">' +
+                    '<div class="avatar" style="background:url(\'' + avatarUrl + '\'); background-size:cover;"></div>' +
+                    '<div>' +
+                        '<div>' + vendor.name + ' ⭐ ' + vendor.rating + ' (' + vendor.trades + ')</div>' +
+                        '<div style="color:#3eea92; font-size:14px;">● Active now</div>' +
+                    '</div>' +
+                '</div>' +
+            '</td>' +
+            '<td>' +
+                '<div class="price">$' + price + ' ' +
+                    '<span class="badge-red">' + badgePct + '</span>' +
+                '</div>' +
+            '</td>' +
+            '<td>' + available + ' USDT</td>' +
+            '<td>' + limits + '</td>' +
+            '<td><span class="payment">' + payment + '</span></td>' +
+            '<td>' +
+                '<div class="action">' +
+                    '<button class="buy-action">Buy →</button>' +
+                    '<button class="icon-btn">💬</button>' +
+                    '<button class="icon-btn">⚑</button>' +
+                '</div>' +
+            '</td>' +
+        '</tr>';
+    }
+
+    // Render vendors to table with optional additional vendors
+    function renderVendors(additionalVendors = []) {
+        const tbody = document.getElementById('vendorsTable');
+        
+        // If this is first load, shuffle and get initial vendors
+        if (additionalVendors.length === 0) {
+            displayedVendors = shuffleArray([...vendorNames]).slice(0, vendorsPerLoad);
+            currentDisplayCount = displayedVendors.length;
+        } else {
+            // Add additional vendors to the displayed list
+            displayedVendors = displayedVendors.concat(additionalVendors);
+            currentDisplayCount = displayedVendors.length;
+        }
+        
+        let html = '';
+        displayedVendors.forEach(function(vendor) {
+            html += generateVendorRow(vendor);
+        });
+        
+        tbody.innerHTML = html;
+        
+        // Update vendor count display
+        document.getElementById('vendor-count').textContent = currentDisplayCount;
+        
+        // Add fade-in animation
+        setTimeout(function() {
+            const rows = tbody.querySelectorAll('.vendor-row');
+            rows.forEach(function(row, index) {
+                setTimeout(function() {
+                    row.classList.add('fade-in');
+                }, index * 50);
+            });
+        }, 10);
+    }
+
+    // Refresh vendors function
+    function refreshVendors() {
+        const refreshBtn = document.getElementById('refreshBtn');
+        const originalText = refreshBtn.innerHTML;
+        
+        // Show loading state
+        refreshBtn.innerHTML = '⟳ Refreshing...';
+        refreshBtn.disabled = true;
+        refreshBtn.classList.add('loading');
+        
+        // Get current rows and add fade-out animation
+        const tbody = document.getElementById('vendorsTable');
+        const rows = tbody.querySelectorAll('.vendor-row');
+        
+        rows.forEach(function(row) {
+            row.classList.add('fading');
+        });
+        
+        // Simulate network delay and then refresh
+        setTimeout(function() {
+            // Regenerate vendors
+            renderVendors();
+            
+            // Reset countdown timer
+            resetCountdown();
+            
+            // Show success state
+            refreshBtn.innerHTML = '✓ Refreshed!';
+            refreshBtn.classList.add('success');
+            
+            // Reset button after 1.5 seconds
+            setTimeout(function() {
+                refreshBtn.innerHTML = originalText;
+                refreshBtn.disabled = false;
+                refreshBtn.classList.remove('loading', 'success');
+            }, 1500);
+            
+        }, 800);
+    }
+
+    // Reset countdown function
+    function resetCountdown() {
+        clearInterval(countdownInterval);
+        timeLeft = 30 * 60;
+        startCountdown();
+    }
+
+    // Countdown timer function
+    function startCountdown() {
+        const countdownElement = document.getElementById('countdown');
+        
+        countdownInterval = setInterval(function() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            
+            countdownElement.textContent = minutes + ':' + seconds.toString().padStart(2, '0');
+            
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                timeLeft = 30 * 60;
+                startCountdown();
+            }
+            
+            timeLeft--;
+        }, 1000);
+    }
+
+    // Load more vendors function - adds more vendors when button is clicked
+    function loadMoreVendors() {
+        const loadMoreBtn = document.querySelector('.load-more-btn');
+        
+        // Check if there are more vendors to load
+        const remainingVendors = vendorNames.length - currentDisplayCount;
+        
+        if (remainingVendors <= 0) {
+            // All vendors already displayed - shuffle and show from beginning
+            displayedVendors = shuffleArray([...vendorNames]).slice(0, vendorsPerLoad);
+            currentDisplayCount = displayedVendors.length;
+            
+            const tbody = document.getElementById('vendorsTable');
+            let html = '';
+            displayedVendors.forEach(function(vendor) {
+                html += generateVendorRow(vendor);
+            });
+            tbody.innerHTML = html;
+            document.getElementById('vendor-count').textContent = currentDisplayCount;
+            
+            // Add fade-in animation
+            setTimeout(function() {
+                const rows = tbody.querySelectorAll('.vendor-row');
+                rows.forEach(function(row, index) {
+                    setTimeout(function() {
+                        row.classList.add('fade-in');
+                    }, index * 50);
+                });
+            }, 10);
+            
+            loadMoreBtn.textContent = 'Load More Vendors';
+            return;
+        }
+        
+        // Show loading state
+        loadMoreBtn.disabled = true;
+        loadMoreBtn.textContent = 'Loading...';
+        
+        // Simulate network delay
+        setTimeout(function() {
+            // Get next batch of vendors
+            const nextVendors = vendorNames.slice(currentDisplayCount, currentDisplayCount + vendorsPerLoad);
+            
+            // Add to displayed vendors
+            displayedVendors = displayedVendors.concat(nextVendors);
+            currentDisplayCount = displayedVendors.length;
+            
+            // Append new rows to table
+            const tbody = document.getElementById('vendorsTable');
+            let html = '';
+            displayedVendors.forEach(function(vendor) {
+                html += generateVendorRow(vendor);
+            });
+            tbody.innerHTML = html;
+            
+            // Update vendor count
+            document.getElementById('vendor-count').textContent = currentDisplayCount;
+            
+            // Add fade-in animation for new rows
+            setTimeout(function() {
+                const rows = tbody.querySelectorAll('.vendor-row');
+                rows.forEach(function(row, index) {
+                    if (index >= currentDisplayCount - vendorsPerLoad) {
+                        setTimeout(function() {
+                            row.classList.add('fade-in');
+                        }, (index - (currentDisplayCount - vendorsPerLoad)) * 50);
+                    }
+                });
+            }, 10);
+            
+            // Check if we've shown all vendors
+            const newRemaining = vendorNames.length - currentDisplayCount;
+            if (newRemaining <= 0) {
+                loadMoreBtn.textContent = 'Show More Vendors';
+            } else {
+                loadMoreBtn.textContent = 'Load More Vendors';
+            }
+            
+            loadMoreBtn.disabled = false;
+        }, 500);
+    }
+
+    // Initialize on page load
+    window.addEventListener('load', function() {
+        renderVendors();
+        startCountdown();
+    });
+</script>
+
+</body>
+</html>
