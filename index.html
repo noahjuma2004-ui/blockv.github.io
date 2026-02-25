@@ -2,6 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="description" content="Blockvance - Digital Crypto Trading Platform">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Blockvance - Digital Trading Platform</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -14,7 +19,13 @@
         <span>DIGITAL TRADING PLATFORM</span>
     </div>
 
-    <nav>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <nav id="mobileNav">
         <ul>
             <li onclick="window.location.href='market.html'">Market</li>
             <li id="tradeBtn" onclick="toggleTradeDropdown(event)">
@@ -156,6 +167,28 @@
         users += increase;
         userCountElement.textContent = formatNumber(users);
     }, 1000);
+
+    // Mobile Menu Toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileNav = document.getElementById('mobileNav');
+
+    if (menuToggle) {
+        menuToggle.addEventListener('click', function() {
+            mobileNav.classList.toggle('active');
+            menuToggle.classList.toggle('active');
+        });
+    }
+
+    // Close menu when nav item is clicked
+    const navLinks = mobileNav.querySelectorAll('a, li');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (!link.classList.contains('trade-dropdown')) {
+                mobileNav.classList.remove('active');
+                if (menuToggle) menuToggle.classList.remove('active');
+            }
+        });
+    });
 
     function toggleTradeDropdown(event) {
         event.stopPropagation();
